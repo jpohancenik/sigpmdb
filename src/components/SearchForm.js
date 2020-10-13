@@ -1,22 +1,23 @@
 import React, { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { FormGroup, TextField, Fab, Grid } from '@material-ui/core';
 import Send from '@material-ui/icons/Send';
-import { findMovies } from '../utils/findMovies';
+import { query, fetch } from '../store/moviesSlice';
 
 function SearchForm() {
-  const [query, setQuery] = useState('');
+  const moviesQuery = useSelector(query);
+  const [inputQuery, setInputQuery] = useState(moviesQuery);
+  const dispatch = useDispatch();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(query);
-    if (query.length > 0) {
-      const result = await findMovies(query);
-      console.log(result);
+    if (inputQuery.length > 0) {
+      dispatch(fetch(inputQuery));
     }
   };
 
   const handleChange = (e) => {
-    setQuery(e.target.value);
+    setInputQuery(e.target.value);
   };
 
   return (
@@ -26,7 +27,7 @@ function SearchForm() {
           <Grid item xs={8}>
             <TextField
               fullWidth
-              value={query}
+              value={inputQuery}
               onChange={handleChange}
               placeholder="Enter movie name"
             />
