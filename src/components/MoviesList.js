@@ -1,5 +1,6 @@
 import React from 'react';
 import { Typography, Grid, makeStyles } from '@material-ui/core';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   img: {
@@ -12,6 +13,9 @@ const useStyles = makeStyles((theme) => ({
   movieItemTitle: {
     marginBottom: theme.spacing(1),
   },
+  movieItemYear: {
+    marginBottom: theme.spacing(2),
+  },
 }));
 
 const MoviesList = ({ movies }) => {
@@ -22,7 +26,6 @@ const MoviesList = ({ movies }) => {
       {movies && movies.length ? (
         <div>
           {movies.map((movie) => {
-            console.log(movie);
             return (
               <Grid
                 container
@@ -48,7 +51,10 @@ const MoviesList = ({ movies }) => {
                   <Typography variant="h4" className={classes.movieItemTitle}>
                     {movie.Title}
                   </Typography>
-                  <Typography variant="body1">{movie.Year}</Typography>
+                  <Typography variant="body1" className="movieItemYear">
+                    {movie.Year}
+                  </Typography>
+                  <Link to={`/detail/${movie.imdbID}`}>Go to movie detail</Link>
                 </Grid>
               </Grid>
             );
