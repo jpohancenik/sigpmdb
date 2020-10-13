@@ -22,7 +22,7 @@ function App() {
         <Header />
         <Container fixed>
           <Switch>
-            <Route path="/detail">
+            <Route path="/detail/:id">
               <MovieDetail />
             </Route>
             <Route path="/favorites">
