@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Grid, makeStyles, Typography } from '@material-ui/core';
+import { Grid, makeStyles, Typography, Button } from '@material-ui/core';
 import { Link, useParams } from 'react-router-dom';
 import { findMovie } from '../utils/findMovie';
+import Star from '@material-ui/icons/Star';
+import StarBorder from '@material-ui/icons/StarBorder';
+import { isInFavs, addToFavs, removeFromFavs } from '../utils/favorites';
 
 const useStyles = makeStyles((theme) => ({
   img: {
@@ -28,6 +31,7 @@ function MovieDetail() {
   const classes = useStyles();
   const { id } = useParams();
   const [movieData, setMovieData] = useState(null);
+  const [movieFav, setMovieFav] = useState(false);
 
   useEffect(() => {
     getMovie(id);
@@ -37,8 +41,21 @@ function MovieDetail() {
     const response = await findMovie(id);
     if (response && response.status === 200) {
       setMovieData(response.data);
+      if (isInFavs(response.data.imdbID)) {
+        setMovieFav(true);
+      }
     }
     return null;
+  };
+
+  const handleAddToFavs = () => {
+    addToFavs(movieData);
+    setMovieFav(true);
+  };
+
+  const handleRemoveFromFavs = () => {
+    removeFromFavs(movieData.imdbID);
+    setMovieFav(false);
   };
 
   return (
@@ -73,6 +90,27 @@ function MovieDetail() {
               <Typography variant="body2" className={classes.movieItemParam}>
                 Starring: {movieData.Actors}
               </Typography>
+              <div>
+                {movieFav ? (
+                  <Button
+                    type="button"
+                    variant="contained"
+                    title="Remove from favorites"
+                    onClick={handleRemoveFromFavs}
+                  >
+                    <Star />
+                  </Button>
+                ) : (
+                  <Button
+                    type="button"
+                    variant="contained"
+                    title="Add to favorites"
+                    onClick={handleAddToFavs}
+                  >
+                    <StarBorder />
+                  </Button>
+                )}
+              </div>
             </Grid>
           </Grid>
           <Typography variant="body1">{movieData.Plot}</Typography>
